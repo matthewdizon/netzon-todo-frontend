@@ -72,7 +72,8 @@ function App() {
   const setBool = (title) => {
     const curr_task = tasks.find(e => {return( e.title === title )})
     if (curr_task) {
-      curr_task.done = !curr_task.done
+      curr_task.done = !curr_task.done;
+      curr_task.date_finished = Date.now();
     }
   }
 
@@ -82,7 +83,7 @@ function App() {
       done: false,
       // deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
       deadline: new Date(Date.now()).toLocaleString(),
-      date_finished: Date.now(),
+      date_finished: 0,
     }
 
     // Add New Task
@@ -103,7 +104,8 @@ function App() {
         <p>{title}</p>
         {/* <p>{new Date(deadline).toLocaleString()}</p> */}
         {/* <input type="datetime-local" defaultValue={Date.now()} onChange={e => console.log(e.target.value)}/> */}
-        <input type="datetime-local" value={deadline} onChange={e => console.log(e.target.value)}/>
+        <input type="datetime-local" value={deadline} />
+        <p>{deadline}</p>
         {/* <input type="datetime-local" defaultValue={Date.now()} onChange={e => console.log()}/> */}
         {done ? (<p>{new Date(date_finished).toLocaleString()}</p>) : null}
       </TaskBox>

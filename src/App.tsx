@@ -30,6 +30,18 @@ function App() {
     setTaskInput(e.target.value)
   };
 
+  const handleKeypress = (e) => {
+    console.log("keycode: ", e.keyCode)
+    console.log("here:", e.code)
+    if (e.code === "Enter" || e.code === "NumpadEnter") {
+      console.log("enter")
+      if (taskInput !== ""){
+        addTask();
+      }
+    }
+  };
+
+
   const setBool = (index) => {
     console.log(tasks[index])
     tasks[index].done = !tasks[index].done
@@ -71,7 +83,9 @@ function App() {
     console.log(uncompletedTasks.length)
     if (uncompletedTasks.length !== 0){
       return(
-        uncompletedTasks.map((task, index) => {
+        <div>
+        <h1>Tasks</h1>
+        {uncompletedTasks.map((task, index) => {
           return(
             <Task 
               index={index}
@@ -80,7 +94,8 @@ function App() {
               deadline={task.deadline.toDateString()}
             />
           )
-        })
+        })}
+        </div>
       )
     } else {
       return (
@@ -95,7 +110,9 @@ function App() {
     console.log(completedTasks.length)
     if (completedTasks.length !== 0){
       return(
-        completedTasks.map((task, index) => {
+        <div>
+        <h1>Cleared Tasks</h1>
+        {completedTasks.map((task, index) => {
           return(
             <Task 
               index={index}
@@ -104,7 +121,8 @@ function App() {
               deadline={task.deadline.toDateString()}
             />
           )
-        })
+        })}
+        </div>
       )
     } else {
       return (
@@ -118,7 +136,7 @@ function App() {
       <Navbar />
       <h1>To-Do List</h1>
       <div>
-        <input type="text" value={taskInput} onChange={e => saveInput(e)}/>
+        <input type="text" value={taskInput} onChange={e => saveInput(e)} onKeyPress={e => handleKeypress(e)} />
         <button onClick={() => addTask()}>Add Task</button>
       </div>
       <div>

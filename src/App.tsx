@@ -1,10 +1,27 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from "./components/Navbar";
 import styled from "styled-components"
 
 const TaskBoxContainer = styled.div`
   background: gray;
+
+  .taskbox-headers {
+    display: flex;
+    justify-content: space-evenly;
+
+    .tab {
+      text-transform: uppercase;
+
+      :hover{
+        cursor: pointer;
+      }
+    }
+
+    .active-tab {
+      color: white;
+      border-bottom: solid 3px white;
+    }
+  }
 `
 
 const TaskBox = styled.div`
@@ -69,9 +86,8 @@ function App() {
   const Task = ({index, title, done, deadline}) => {
     return(
       <TaskBox>
-        <p>{index + 1}</p>
-        <p>{title}</p>
         <input type="checkbox" defaultChecked={done} onChange={() => setBool(index)}/>
+        <p>{title}</p>
         <p>{deadline}</p>
       </TaskBox>
     )
@@ -133,19 +149,20 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
-      <h1>To-Do List</h1>
       <div>
-        <input type="text" value={taskInput} onChange={e => saveInput(e)} onKeyPress={e => handleKeypress(e)} />
-        <button onClick={() => addTask()}>Add Task</button>
+        <h1>To-Do List</h1>
+        <div>
+          <input type="text" value={taskInput} onChange={e => saveInput(e)} onKeyPress={e => handleKeypress(e)} />
+          <button onClick={() => addTask()}>Add Task</button>
+        </div>
+        <TaskBoxContainer>
+          <div className="taskbox-headers">
+            <p onClick={() => setTab(0)} className={tab === 0 ? "tab active-tab" : "tab"}>Tasks</p>
+            <p onClick={() => setTab(1)} className={tab === 1 ? "tab active-tab" : "tab"}>Cleared</p>
+          </div>
+          {tab === 0 ? renderUncompletedTasks() : renderCompletedTasks()}
+        </TaskBoxContainer>
       </div>
-      <div>
-        <button onClick={() => setTab(0)}>Tasks</button>
-        <button onClick={() => setTab(1)}>Cleared</button>
-      </div>
-      <TaskBoxContainer>
-        {tab === 0 ? renderUncompletedTasks() : renderCompletedTasks()}
-      </TaskBoxContainer>
     </div>
   );
 }

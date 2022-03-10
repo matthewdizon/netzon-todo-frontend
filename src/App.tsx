@@ -3,8 +3,6 @@ import './App.css';
 import styled from "styled-components"
 
 const TaskBoxContainer = styled.div`
-  background: gray;
-
   .taskbox-headers {
     display: flex;
     justify-content: space-evenly;
@@ -28,12 +26,18 @@ const TaskBox = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+
+  :hover {
+    background: #14213d;
+    cursor: pointer;
+  }
 `
 const defaultTasks = [
   {
     title: "Work on Todo",
     done: false,
-    deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
+    // deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
+    deadline: Date.now(),
   },
 ]
 
@@ -69,7 +73,8 @@ function App() {
     const currTask = {
       title: taskInput,
       done: false,
-      deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
+      // deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
+      deadline: Date.now(),
     }
 
     // Add New Task
@@ -88,7 +93,7 @@ function App() {
       <TaskBox>
         <input type="checkbox" defaultChecked={done} onChange={() => setBool(index)}/>
         <p>{title}</p>
-        <p>{deadline}</p>
+        <p>{new Date(deadline).toLocaleString()}</p>
       </TaskBox>
     )
   }
@@ -100,17 +105,16 @@ function App() {
     if (uncompletedTasks.length !== 0){
       return(
         <div>
-        <h1>Tasks</h1>
-        {uncompletedTasks.map((task, index) => {
-          return(
-            <Task 
-              index={index}
-              title={task.title}
-              done={task.done}
-              deadline={task.deadline.toDateString()}
-            />
-          )
-        })}
+          {uncompletedTasks.map((task, index) => {
+            return(
+              <Task 
+                index={index}
+                title={task.title}
+                done={task.done}
+                deadline={task.deadline}
+              />
+            )
+          })}
         </div>
       )
     } else {
@@ -127,17 +131,16 @@ function App() {
     if (completedTasks.length !== 0){
       return(
         <div>
-        <h1>Cleared Tasks</h1>
-        {completedTasks.map((task, index) => {
-          return(
-            <Task 
-              index={index}
-              title={task.title}
-              done={task.done}
-              deadline={task.deadline.toDateString()}
-            />
-          )
-        })}
+          {completedTasks.map((task, index) => {
+            return(
+              <Task 
+                index={index}
+                title={task.title}
+                done={task.done}
+                deadline={task.deadline}
+              />
+            )
+          })}
         </div>
       )
     } else {

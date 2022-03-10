@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 import App from './App';
-import PrivacyPolicy from './routes/PrivacyPolicy';
 import Navbar from "./components/Navbar";
+import PrivacyPolicy from './routes/PrivacyPolicy';
+import TermsOfServices from './routes/TermsOfServices';
 
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -22,7 +23,10 @@ const MainContainer = styled.div`
 `
 
 const ContentContainer = styled.div`
-  height: 100%;
+  background: #020005;
+  color: white;
+
+  height: 100vh;
   width: 80%;
   text-align: center;
   padding-left: 20%;
@@ -36,7 +40,7 @@ ReactDOM.render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="privacypolicy" element={<PrivacyPolicy />} />
-          {/* <Route path="invoices" element={<Invoices />} /> */}
+          <Route path="tos" element={<TermsOfServices />} />
         </Routes>
       </ContentContainer>
     </MainContainer>

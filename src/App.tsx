@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import styled from "styled-components"
+import { createNumericLiteral } from 'typescript';
 
 const TaskBoxContainer = styled.div`
   .taskbox-headers {
@@ -8,9 +9,11 @@ const TaskBoxContainer = styled.div`
     justify-content: space-evenly;
 
     .tab {
+      width: 50%;
       text-transform: uppercase;
 
       :hover{
+        border-bottom: solid 3px white;
         cursor: pointer;
       }
     }
@@ -37,15 +40,18 @@ const defaultTasks = [
     title: "Work on Todo",
     done: false,
     // deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
-    deadline: Date.now(),
+    deadline: new Date(Date.now()).toLocaleString(),
+    date_finished: 0,
   },
 ]
 
 function App() {
 
+
   const [taskInput, setTaskInput] = useState("")
   const [tasks, setTasks] = useState(defaultTasks)
   const [tab, setTab] = useState(0)
+  console.log(tasks)
 
   const saveInput = (e) => {
     setTaskInput(e.target.value)
@@ -63,10 +69,11 @@ function App() {
   };
 
 
-  const setBool = (index) => {
-    console.log(tasks[index])
-    tasks[index].done = !tasks[index].done
-    // tasks[index]
+  const setBool = (title) => {
+    const curr_task = tasks.find(e => {return( e.title === title )})
+    if (curr_task) {
+      curr_task.done = !curr_task.done
+    }
   }
 
   const addTask = () => {
@@ -74,7 +81,8 @@ function App() {
       title: taskInput,
       done: false,
       // deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
-      deadline: Date.now(),
+      deadline: new Date(Date.now()).toLocaleString(),
+      date_finished: Date.now(),
     }
 
     // Add New Task
@@ -88,12 +96,16 @@ function App() {
     console.log("hello")
   }, [tasks])
 
-  const Task = ({index, title, done, deadline}) => {
+  const Task = ({index, title, done, deadline, date_finished}) => {
     return(
       <TaskBox>
-        <input type="checkbox" defaultChecked={done} onChange={() => setBool(index)}/>
+        <input type="checkbox" defaultChecked={done} onChange={() => setBool(title)}/>
         <p>{title}</p>
-        <p>{new Date(deadline).toLocaleString()}</p>
+        {/* <p>{new Date(deadline).toLocaleString()}</p> */}
+        {/* <input type="datetime-local" defaultValue={Date.now()} onChange={e => console.log(e.target.value)}/> */}
+        <input type="datetime-local" value={deadline} onChange={e => console.log(e.target.value)}/>
+        {/* <input type="datetime-local" defaultValue={Date.now()} onChange={e => console.log()}/> */}
+        {done ? (<p>{new Date(date_finished).toLocaleString()}</p>) : null}
       </TaskBox>
     )
   }
@@ -107,11 +119,13 @@ function App() {
         <div>
           {uncompletedTasks.map((task, index) => {
             return(
-              <Task 
+              <Task
+                key={index}
                 index={index}
                 title={task.title}
                 done={task.done}
                 deadline={task.deadline}
+                date_finished={task.date_finished}
               />
             )
           })}
@@ -119,7 +133,7 @@ function App() {
       )
     } else {
       return (
-        <h1>No Completed Tasks</h1>
+        <h1>No Tasks</h1>
       )
     }
   }
@@ -133,11 +147,13 @@ function App() {
         <div>
           {completedTasks.map((task, index) => {
             return(
-              <Task 
+              <Task
+                key={index}
                 index={index}
                 title={task.title}
                 done={task.done}
                 deadline={task.deadline}
+                date_finished={task.date_finished}
               />
             )
           })}

@@ -23,12 +23,27 @@ const TaskBoxContainer = styled.div`
       border-bottom: solid 3px white;
     }
   }
+
+  .column-headers {
+    display: flex;
+
+    * {
+      flex: 1;
+    }
+  }
 `
 
 const TaskBox = styled.div`
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
+
+  * {
+    flex: 1;
+  }
+
+  /* input[type=checkbox] {
+    flex: 0 0 20%;
+  } */
 
   :hover {
     background: #14213d;
@@ -149,7 +164,7 @@ function App() {
         <input type="checkbox" defaultChecked={done} onChange={() => setBool(title)}/>
         <p>{title}</p>
         <input type="datetime-local" defaultValue={deadline} />
-        {done ? (<p>{new Date(date_finished).toLocaleString()}</p>) : null}
+        <p>{done ? new Date(date_finished).toLocaleString() : "Time Left"}</p>
       </TaskBox>
     )
   }
@@ -226,6 +241,12 @@ function App() {
           <div className="taskbox-headers">
             <p onClick={() => setTab(0)} className={tab === 0 ? "tab active-tab" : "tab"}>Tasks</p>
             <p onClick={() => setTab(1)} className={tab === 1 ? "tab active-tab" : "tab"}>Cleared</p>
+          </div>
+          <div className="column-headers">
+            <p>Status</p>
+            <p>Title</p>
+            <p>Deadline</p>
+            <p>{tab === 0 ? "Time Left" : "Accopmlished Time"}</p>
           </div>
           {tab === 0 ? renderUncompletedTasks() : renderCompletedTasks()}
         </TaskBoxContainer>

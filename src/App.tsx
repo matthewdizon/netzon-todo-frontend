@@ -41,10 +41,6 @@ const TaskBox = styled.div`
     flex: 1;
   }
 
-  /* input[type=checkbox] {
-    flex: 0 0 20%;
-  } */
-
   :hover {
     background: #14213d;
     cursor: pointer;
@@ -97,9 +93,7 @@ function App() {
   };
 
   const handleKeypress = (e) => {
-    console.log("here:", e.code)
     if (e.code === "Enter" || e.code === "NumpadEnter") {
-      console.log("enter")
       if (taskInput !== ""){
         addTask();
       }
@@ -115,7 +109,17 @@ function App() {
     if (curr_task) {
       curr_task.done = !curr_task.done;
       curr_task.date_finished = Date.now();
-    }
+
+      const newTasks = [...tasks]
+      const new_curr_task = {
+        title: curr_task.title,
+        done: !curr_task.done,
+        deadline: curr_task.deadline,
+        date_finished: Date.now(),
+      }
+      newTasks[curr_task.index] = new_curr_task
+      setTasks(newTasks)
+  }
 
     setTimeout(() => {
       {tab === 0 ? renderUncompletedTasks() : renderCompletedTasks()}
@@ -154,17 +158,14 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    console.log("change: hello")
-  }, [tasks])
-
   const Task = ({index, title, done, deadline, date_finished}) => {
     return(
       <TaskBox>
         <input type="checkbox" defaultChecked={done} onChange={() => setBool(title)}/>
         <p>{title}</p>
         <input type="datetime-local" defaultValue={deadline} />
-        <p>{done ? new Date(date_finished).toLocaleString() : "Time Left"}</p>
+        {/* <p>{done ? new Date(date_finished).toLocaleString() : "Time Left"}</p> */}
+        {done ? (<p>{new Date(date_finished).toLocaleString()}</p>) : null}
       </TaskBox>
     )
   }
@@ -172,7 +173,6 @@ function App() {
   const renderUncompletedTasks = () => {
     const uncompletedTasks = tasks.filter((task) => task.done === false)
 
-    console.log(uncompletedTasks.length)
     if (uncompletedTasks.length !== 0){
       return(
         <div>
@@ -200,7 +200,6 @@ function App() {
   const renderCompletedTasks = () => {
     const completedTasks = tasks.filter((task) => task.done === true)
 
-    console.log(completedTasks.length)
     if (completedTasks.length !== 0){
       return(
         <div>
@@ -246,7 +245,8 @@ function App() {
             <p>Status</p>
             <p>Title</p>
             <p>Deadline</p>
-            <p>{tab === 0 ? "Time Left" : "Accopmlished Time"}</p>
+            {/* <p>{tab === 0 ? "Time Left" : "Accopmlished Time"}</p> */}
+            {tab === 0 ? null : (<p>Accomplished Time</p>)}
           </div>
           {tab === 0 ? renderUncompletedTasks() : renderCompletedTasks()}
         </TaskBoxContainer>

@@ -82,7 +82,6 @@ function App() {
   };
 
   const handleKeypress = (e) => {
-    console.log("keycode: ", e.keyCode)
     console.log("here:", e.code)
     if (e.code === "Enter" || e.code === "NumpadEnter") {
       console.log("enter")
@@ -112,6 +111,10 @@ function App() {
     setTasks([])
   }
 
+  const setDummyTasks = () => {
+    setTasks(dummyTasks)
+  }
+
   const addTask = () => {
     const currTask = {
       title: taskInput,
@@ -125,10 +128,15 @@ function App() {
     // Add New Task
     if (!checkTask && currTask.title !== "") {
       setTasks([...tasks, currTask])
-    }
+      
+      // Clear input field
+      setTaskInput("")
 
-    // Clear input field
-    setTaskInput("")
+      // Change tab to Tasks
+      setTab(0)
+    } else if (checkTask) {
+      alert(`Task: '${checkTask.title}' is already in your list!`)
+    }
   };
 
   useEffect(() => {
@@ -140,10 +148,7 @@ function App() {
       <TaskBox>
         <input type="checkbox" defaultChecked={done} onChange={() => setBool(title)}/>
         <p>{title}</p>
-        {/* <p>{new Date(deadline).toLocaleString()}</p> */}
-        {/* <input type="datetime-local" defaultValue={Date.now()} onChange={e => console.log(e.target.value)}/> */}
         <input type="datetime-local" defaultValue={deadline} />
-        {/* <input type="datetime-local" defaultValue={Date.now()} onChange={e => console.log()}/> */}
         {done ? (<p>{new Date(date_finished).toLocaleString()}</p>) : null}
       </TaskBox>
     )
@@ -212,7 +217,10 @@ function App() {
         <div>
           <input type="text" value={taskInput} onChange={e => saveInput(e)} onKeyPress={e => handleKeypress(e)} />
           <button onClick={() => addTask()}>Add Task</button>
-          <button onClick={() => clearTasks()}>Clear Tasks</button>
+          <div>
+            <button onClick={() => clearTasks()}>Delete All Tasks</button>
+            <button onClick={() => setDummyTasks()}>Set Dummy Tasks</button>
+          </div>
         </div>
         <TaskBoxContainer>
           <div className="taskbox-headers">

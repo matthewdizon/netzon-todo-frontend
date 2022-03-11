@@ -35,23 +35,47 @@ const TaskBox = styled.div`
     cursor: pointer;
   }
 `
-const defaultTasks = [
+const dummyTasks = [
   {
-    title: "Work on Todo",
+    title: "Create Todo List Page",
     done: false,
-    // deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
-    deadline: new Date(Date.now()).toLocaleString(),
+    deadline: new Date(Date.now()).toISOString().slice(0, 19),
     date_finished: 0,
+  },
+  {
+    title: "Find Examples of Privacy Policy Page",
+    done: false,
+    deadline: new Date(Date.now()).toISOString().slice(0, 19),
+    date_finished: 0,
+  },
+  {
+    title: "Push TOS Page to Master",
+    done: false,
+    deadline: new Date(Date.now()).toISOString().slice(0, 19),
+    date_finished: 0,
+  },
+  {
+    title: "Contact groupmates for Philosophy",
+    done: true,
+    deadline: new Date(Date.now()).toISOString().slice(0, 19),
+    date_finished: new Date(Date.now()).toISOString().slice(0, 19),
+  },
+  {
+    title: "Create GitHub repository for dev exam",
+    done: true,
+    deadline: new Date(Date.now()).toISOString().slice(0, 19),
+    date_finished: new Date(Date.now()).toISOString().slice(0, 19),
   },
 ]
 
+const localTasks = localStorage.getItem("tasks") || "";
+
+const defaultTasks = localTasks ? JSON.parse(localTasks) : dummyTasks
+
 function App() {
-
-
   const [taskInput, setTaskInput] = useState("")
   const [tasks, setTasks] = useState(defaultTasks)
   const [tab, setTab] = useState(0)
-  console.log(tasks)
 
   const saveInput = (e) => {
     setTaskInput(e.target.value)
@@ -68,6 +92,9 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   const setBool = (title) => {
     const curr_task = tasks.find(e => {return( e.title === title )})
@@ -75,26 +102,37 @@ function App() {
       curr_task.done = !curr_task.done;
       curr_task.date_finished = Date.now();
     }
+
+    setTimeout(() => {
+      {tab === 0 ? renderUncompletedTasks() : renderCompletedTasks()}
+    }, 5000);
+  }
+
+  const clearTasks = () => {
+    setTasks([])
   }
 
   const addTask = () => {
     const currTask = {
       title: taskInput,
       done: false,
-      // deadline: new Date(2018, 11, 24, 10, 33, 30, 0),
-      deadline: new Date(Date.now()).toLocaleString(),
+      deadline: new Date(Date.now()).toISOString().slice(0, 19) ,
       date_finished: 0,
     }
 
+    const checkTask = tasks.find(e => {return( e.title === currTask.title )})
+
     // Add New Task
-    tasks.push(currTask)
+    if (!checkTask && currTask.title !== "") {
+      setTasks([...tasks, currTask])
+    }
 
     // Clear input field
     setTaskInput("")
   };
 
   useEffect(() => {
-    console.log("hello")
+    console.log("change: hello")
   }, [tasks])
 
   const Task = ({index, title, done, deadline, date_finished}) => {
@@ -104,8 +142,7 @@ function App() {
         <p>{title}</p>
         {/* <p>{new Date(deadline).toLocaleString()}</p> */}
         {/* <input type="datetime-local" defaultValue={Date.now()} onChange={e => console.log(e.target.value)}/> */}
-        <input type="datetime-local" value={deadline} />
-        <p>{deadline}</p>
+        <input type="datetime-local" defaultValue={deadline} />
         {/* <input type="datetime-local" defaultValue={Date.now()} onChange={e => console.log()}/> */}
         {done ? (<p>{new Date(date_finished).toLocaleString()}</p>) : null}
       </TaskBox>
@@ -175,6 +212,7 @@ function App() {
         <div>
           <input type="text" value={taskInput} onChange={e => saveInput(e)} onKeyPress={e => handleKeypress(e)} />
           <button onClick={() => addTask()}>Add Task</button>
+          <button onClick={() => clearTasks()}>Clear Tasks</button>
         </div>
         <TaskBoxContainer>
           <div className="taskbox-headers">

@@ -27,7 +27,7 @@ function Navbar() {
     <StyledNav>
       <a href="/"><h1>Netzon</h1></a>
       <a href="/privacypolicy">Privacy Policy</a>
-      <a href="/tos">Terms of Services</a>
+      <a href="/tos">Terms of Service</a>
       <div>
         <a href="http://matthewdizon.com/" target="_blank">Matthew Dizon</a>
       </div>
